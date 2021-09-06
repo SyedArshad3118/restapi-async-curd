@@ -11,9 +11,8 @@ from asgiref.sync import sync_to_async
 from aiohttp import web
 
 @sync_to_async 
-@api_view(['GET', 'POST','PUT', 'DELETE'])
+@api_view(['GET', 'POST', 'DELETE'])
 def curd_list(request):
-    emp=None
     if request.method == 'GET':
         emp = employee.objects.all()
         name = request.query_params.get('name', None)
@@ -60,8 +59,8 @@ def curd_detail(request,pk):
         
 @sync_to_async        
 @api_view(['GET'])
-def curd(request,pk):
-    emp = employee.objects.filter(name=pk)
+def curd(request,name):
+    emp = employee.objects.filter(name=name)
     if request.method == 'GET': 
         curd_serializer = curdserializers(emp, many=True)
         return JsonResponse(curd_serializer.data, safe=False)
@@ -71,3 +70,4 @@ async def sample(request):
     loop.create_task(curd_list())
     loop.create_task(curd_detail())
     return HttpResponse("hai")
+ 
